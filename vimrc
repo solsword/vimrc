@@ -106,6 +106,30 @@ hi SpellCaps term=standout,bold cterm=standout,bold ctermfg=none ctermbg=none
 " Highlight background for the omni-completion menu
 hi Pmenu ctermbg=2
 
+" -------------------
+" Loading large files
+" -------------------
+" http://vim.wikia.com/wiki/Faster_loading_of_large_files
+
+if !exists("largefile_autocmd_def")
+  let largefile_autocmd_def = 1
+  " Large files are > 50 MB
+  let g:LargeFile = 1024 * 1024 * 10
+  augroup LargeFile
+    autocmd BufReadPre * let fs=getfsize(expand("<afile>")) | if fs > g:LargeFile || fs == -2 | call LargeFile() | endif
+  augroup END
+  function LargeFile()
+    " No syntax highlighting etc.
+    set eventignore+=FileType
+    " No swap file
+    setlocal noswapfile
+    " Read-only by default
+    setlocal buftype=nowrite
+    " display message
+    autocmd VimEnter * echo "The file is larger than " . (g:LargeFile / 1024 / 1024) . "MB, so some options are changed (see .vimrc for details)."
+  endfunction
+endif
+
 " -------
 " Folding
 " -------
