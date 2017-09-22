@@ -263,3 +263,12 @@ nmap <leader><return> v$hy:!"<CR>
 
 " Get syntax attributes under cursor (see SynAttr.vim):
 nmap <leader>H :call SyntaxAttr()<CR>
+
+" -------------------
+" Local customization
+" -------------------
+"  Note: This comes *last* to override non-local options where necessary.
+
+if filereadable("local.vim")
+  source "local.vim"
+endif
