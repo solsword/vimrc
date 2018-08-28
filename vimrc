@@ -42,6 +42,7 @@ runtime macros/matchit.vim
 
 " Enable modelines:
 set modeline
+set modelines=5
 
 " Backspacing:
 set backspace=indent,eol,start
@@ -99,12 +100,18 @@ syntax on
 " Spell checking:
 set spell
 
+" Ensure spell-checking of top-level stuff
+syntax spell toplevel
+
 " Spelling highlight groups:
 hi SpellBad term=standout,bold cterm=standout,bold ctermfg=none ctermbg=none
 hi SpellCaps term=standout,bold cterm=standout,bold ctermfg=none ctermbg=none
 
 " Highlight background for the omni-completion menu
 hi Pmenu ctermbg=2
+
+" Limit highlighting for long lines:
+set synmaxcol=1000
 
 " -------------------
 " Loading large files
@@ -121,10 +128,13 @@ if !exists("largefile_autocmd_def")
   function LargeFile()
     " No syntax highlighting etc.
     set eventignore+=FileType
+    syntax off
     " No swap file
     setlocal noswapfile
     " Read-only by default
     setlocal buftype=nowrite
+    " No line wrapping
+    setlocal nowrap
     " display message
     autocmd VimEnter * echo "The file is larger than " . (g:LargeFile / 1024 / 1024) . "MB, so some options are changed (see .vimrc for details)."
   endfunction
