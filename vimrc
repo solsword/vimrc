@@ -207,12 +207,12 @@ nmap <leader>H :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . "> 
 
 " Copy/paste to/from the X clipboard using Tab and Shift-Tab:
 " Note: vim must be compiled with +clipboard enabled.
-nmap <Tab> "+p
-vmap <S-Tab> "+y
+"nmap <Tab> "+p
+"vmap <S-Tab> "+y
 
-" Maybe works for mac?
-"nmap <Tab> :r !pbpaste<CR>
-"vmap <S-Tab> :w !pbcopy<CR><CR>
+" Works for mac
+nmap <Tab> :r !pbpaste<CR>
+vmap <S-Tab> :w !pbcopy<CR><CR>
 
 " Deleting without overwriting the default cut buffer:
 nmap dx "_dd
