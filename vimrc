@@ -49,10 +49,13 @@ set backspace=indent,eol,start
 
 " Indenting/tabs:
 set expandtab
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
 set autoindent
 set cinoptions=+s,(s,U1,m1,j1,J1
+
+" Default wrap margin (partly for python docstrings)
+set wrapmargin=7
 
 " Don't put two spaces after periods when joining lines:
 set nojoinspaces
