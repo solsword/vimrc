@@ -15,8 +15,8 @@ setlocal nolisp
 setlocal autoindent
 setlocal indentexpr=GetPythonIndent(v:lnum)
 setlocal indentkeys=!^F,o,O,<:>,0),0],0},=elif,=except
-setlocal shiftwidth=2
-setlocal tabstop=2
+setlocal shiftwidth=4
+setlocal tabstop=4
 
 let s:maxoff = 50
 
