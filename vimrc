@@ -13,7 +13,8 @@ set fileencoding=utf-8
 call pathogen#infect()
 "call pathogen#helptags() 
 " Additional runtime autoloading:
-autocmd FuncUndefined * exe 'runtime autoload/' . expand('<afile>') . '.vim'
+" TODO: Why does this break things when syntastic is in the mix? Fix it?
+"autocmd FuncUndefined * exe 'runtime autoload/' . expand('<afile>') . '.vim'
 
 " set <space> as the leader key for mappings: 
 nnoremap <space> <nop>
@@ -251,7 +252,8 @@ nmap <leader>h gT
 nmap <leader>l gt
 
 " Splitting lines on arguments
-nmap <leader>k 0/[({[]<CR>a<CR><Esc>:s/\([,()]\+\) \?/\1<C-V><CR>/<CR>k:+g/\m^\s*$/d<CR>k$i<CR><Esc>V%:s/\()[,:]\?\)$/<C-V><CR>\1<CR>:-g/\m^\s*$/d<CR>$V%=
+" TODO: Fix this up sometime?
+"nmap <leader>p 0/[({[]<CR>a<CR><Esc>:s/\([,()]\+\) \?/\1<C-V><CR>/<CR>k:+g/\m^\s*$/d<CR>k$i<CR><Esc>V%:s/\()[,:]\?\)$/<C-V><CR>\1<CR>:-g/\m^\s*$/d<CR>$V%=
 
 " --------------
 " Plugin-related
@@ -265,8 +267,12 @@ nmap <leader>wh :SidewaysLeft<CR>
 nmap <leader>wl :SidewaysRight<CR>
 
 " Easy cnext and cprevious:
-nmap <leader>. :cnext<CR>
-nmap <leader>, :cprevious<CR>
+nmap <leader>. :cafter<CR>
+nmap <leader>, :cbefore<CR>
+
+" Easy lnext and lprevious:
+nmap <leader>> :lafter<CR>
+nmap <leader>< :lbefore<CR>
 
 " Re-sync syntax from start and re-draw on-demand:
 nmap <leader>r :syntax sync fromstart<CR>:redraw!<CR>
@@ -276,6 +282,58 @@ nmap <leader><return> v$hy:!"<CR>
 
 " Get syntax attributes under cursor (see SynAttr.vim):
 nmap <leader>H :call SyntaxAttr()<CR>
+
+" Syntastic recommended settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+nmap <leader>L :SyntasticToggle<CR>
+
+" For now, set syntastic to active mode by default
+let g:syntastic_mode_map = {
+    \ "mode": "active",
+    \ "active_filetypes": [],
+    \ "passive_filetypes": []
+    \}
+
+" Note: Use .jshintrc/.flake8/etc. linter-specific files to suppress
+" undesirable warnings instead of syntastic suppression.
+
+" Verbosity from jshint so that it tells us warnings numbers
+let g:syntastic_javascript_jshint_args = "--verbose"
+let g:syntastic_js_jshint_args = "--verbose"
+let g:syntastic_html_jshint_args = "--verbose"
+let g:syntastic_python_checkers = ["flake8"]
+let g:syntastic_python_flake8_args = "--config ~/.config/flake8"
+
+" Function to toggle between mypy and flake8 + mypy for checking Python code
+function ToggleMyPy()
+    if len(g:syntastic_python_checkers) == 1
+        let g:syntastic_python_checkers = ["mypy", "flake8"]
+    else
+        let g:syntastic_python_checkers = ["flake8"]
+    endif
+    SyntasticCheck
+endfunction
+nmap <leader>M :call ToggleMyPy()<CR>
+
+" ----------------------------------------
+" Quickfix and location-list window sizing
+" ----------------------------------------
+
+" See:
+" https://vim.fandom.com/wiki/Automatically_fitting_a_quickfix_window_height
+
+au FileType qf call AdjustWindowHeight(2, 5)
+function! AdjustWindowHeight(minheight, maxheight)
+  exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
+endfunction
 
 " -------------------
 " Local customization
